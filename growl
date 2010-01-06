@@ -1,0 +1,40 @@
+#!/usr/bin/osascript
+--this is just an adaptation of the example at 
+--      http://growl.info/documentation/applescript-support.php#usage
+--      adapted to take arguments
+on run argv
+	tell application "GrowlHelperApp"
+		if length of argv is 0 then
+			return
+		end if
+		--display dialog argv
+		-- Make a list of all the notification types 
+		-- that this script will ever send:
+		set the allNotificationsList to ¬
+			argv
+		
+		-- Make a list of the notifications 
+		-- that will be enabled by default.      
+		-- Those not enabled by default can be enabled later 
+		-- in the 'Applications' tab of the growl prefpane.
+		set the enabledNotificationsList to ¬
+			argv
+		
+		-- Register our script with growl.
+		-- You can optionally (as here) set a default icon 
+		-- for this script's notifications.
+		register as application ¬
+			"AppleScript" all notifications allNotificationsList ¬
+			default notifications enabledNotificationsList ¬
+			icon of application "Finder"
+		
+		--	Send a Notification...
+		repeat with arg in argv
+			set arg to (arg as text)
+			notify with name ¬
+				arg title ¬
+				"AppleScript" description ¬
+				arg application name "AppleScript"
+		end repeat
+	end tell
+end run
